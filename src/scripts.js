@@ -10,9 +10,13 @@ root.style.setProperty('--game-size', `${GAME_SIZE}px`)
 
 function createBoard() {
     const boardElement = document.getElementById('board')
+    // const elements = [];
 
     function createElement(options) {
         let { item, top, left } = options;
+
+        // const currentelement = {}
+        // elements.push();
 
         const htmlElement = document.createElement('div');
         htmlElement.className = item;
@@ -35,14 +39,25 @@ function createBoard() {
                     return { top: top, left: left}
             }
         }
-
+        function validateMoviment(position) {
+            return (
+                position.left >= 48 &&
+                position.left <= 864 &&
+                position.top >= 96 &&
+                position.top <= 816
+            )
+        }
         function move(buttonPressed) {
             console.log('move', buttonPressed);
             const newDirection = getNewDirection(buttonPressed);
-            top = newDirection.top;
-            left = newDirection.left;
-            htmlElement.style.top = `${newDirection.top}px`;
-            htmlElement.style.left = `${newDirection.left}px`;
+            const isValidMoviment = validateMoviment(newDirection)
+
+            if(isValidMoviment) {
+                top = newDirection.top;
+                top = newDirection.left;
+                htmlElement.style.top = `${newDirection.top}px`;
+                htmlElement.style.left = `${newDirection.left}px`;
+            }
         }
         return {
             move: move
@@ -70,9 +85,12 @@ function createBoard() {
             left: options.left
         });
         setInterval(() => {
-
+            const direction = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'];
+            const randomIndex = Math.floor(Math.random() * direction.length);
+            const randomDirection = direction[randomIndex]
+            
+            enemy.move(randomDirection);
         }, 1000)
-        enemy.move();
     }
     return {
         createItem: createItem,
@@ -87,6 +105,10 @@ const board = createBoard();
 // posição y - numero (left)
 board.createItem({ item: 'trap', top: TITLE_SIZE * 10, left: TITLE_SIZE * 10});
 board.createItem({ item: 'chest', top: TITLE_SIZE * 15, left: TITLE_SIZE * 15});
+board.createItem({ item: 'forniture', top: TITLE_SIZE * 17, left: TITLE_SIZE * 2}); /* Escada */
+board.createItem({ item: 'forniture', top: TITLE_SIZE * 2, left: TITLE_SIZE * 8}); /* Fornalhas */
+board.createItem({ item: 'forniture', top: TITLE_SIZE * 2, left: TITLE_SIZE * 16}); /* Fornalhas */
+board.createItem({ item: 'forniture', top: TITLE_SIZE * 2, left: TITLE_SIZE * 3}); /* Fornalhas */
 
 board.createEnemy({top: TITLE_SIZE * 5, left: TITLE_SIZE * 5});
 board.createHero({top: TITLE_SIZE * 16, left: TITLE_SIZE * 2});
